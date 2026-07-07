@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Karibu Dvary Services</h1>
+    <form id="paymentForm">
+        <select id="plan">
+            <option value="500">Daily - 500 TZS</option>
+            <option value="3000">Weekly - 3000 TZS</option>
+        </select>
+        <input type="text" id="phone" placeholder="Namba ya simu" required>
+        <button type="submit">Lipa Sasa</button>
+    </form>
+
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    phone: document.getElementById('phone').value,
+                    amount: document.getElementById('plan').value,
+                    planName: 'Service Plan'
+                })
+            });
+            const data = await res.json();
+            alert(data.success ? "Malipo yameanzishwa!" : "Imeshindikana");
+        });
+    </script>
+</body>
+</html>
+
