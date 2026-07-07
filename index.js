@@ -1,43 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Chagua Plan yako</title>
-</head>
-<body>
-    <h1>Karibu Dvary Services</h1>
-    <form id="paymentForm">
-        <label>Chagua Plan:</label>
-        <select id="plan" required>
-            <option value="500">Daily - 500 TZS</option>
-            <option value="3000">Weekly - 3000 TZS</option>
-            <option value="10000">Monthly - 10000 TZS</option>
-        </select>
-        <br><br>
-        <input type="text" id="phone" placeholder="Namba ya simu (mfano: 0712345678)" required>
-        <button type="submit">Lipa Sasa</button>
-    </form>
+const express = require('express');
+const axios = require('axios');
+const path = require('path');
+const app = express();
 
-    <script>
-        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value;
-            const amount = document.getElementById('plan').value;
-            const planName = document.getElementById('plan').options[document.getElementById('plan').selectedIndex].text;
+app.use(express.json());
+// Inasoma faili la index.html lililopo kwenye root folder moja kwa moja
+app.use(express.static(__dirname));
 
-            const res = await fetch('/api/pay', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, amount, planName })
-            });
-            const data = await res.json();
-            
-            if(data.success) {
-                alert("Ombi la malipo limetumwa! Order ID: " + data.payment.order_id);
-            } else {
-                alert("Malipo yameshindikana, jaribu tena.");
-            }
+const HALAKA_API_KEY = process.env.HALAKA_API_KEY;
+
+app.post('/api/pay', async (req, res) => {
+    const { phone, amount, planName } = req.body;
+    try {
+        const response = await axios.post('https://harakapay.net/api/v1/collect', {
+            phone: phone,
+            amount: parseInt(amount),
+            description: `Malipo ya ${planName}`
+        }, {
+            headers: { 'X-API-Key': HALAKA_API_KEY }
         });
-    </script>
-</body>
-</html>
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ success: false });
+    }
+});
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('Server inaenda!'));
