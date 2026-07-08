@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dvary Services - Chagua Mpango</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            color: #0a0a1a;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 38px;
+            font-weight: 800;
+        }
+
+        .header h1 span {
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        /* Toggle Monthly / Annually */
+        .toggle-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            margin: 30px 0 40px;
+        }
+
+        .toggle-wrapper .label {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .toggle-wrapper .label.active {
+            color: #fff;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.annual .slider {
+            left: 30px;
+        }
+
+        .toggle-switch:hover {
+            border-color: #ffd200;
+        }
+
+        .save-badge {
+            background: rgba(255, 210, 0, 0.15);
+            color: #ffd200;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 210, 0, 0.2);
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        /* Plan Card */
+        .plan-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 24px;
+            padding: 30px 25px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 210, 0, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .plan-card.popular {
+            border-color: #ffd200;
+            background: rgba(255, 210, 0, 0.05);
+        }
+
+        .plan-card.popular::before {
+            content: '🔥 POPULAR';
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            color: #0a0a1a;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 14px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-card .offer-tag {
+            display: inline-block;
+            background: rgba(255, 0, 100, 0.15);
+            color: #ff4d7a;
+            padding: 3px 14px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 0, 100, 0.15);
+        }
+
+        .plan-card .new-user-tag {
+            display: inline-block;
+            background: rgba(0, 200, 150, 0.15);
+            color: #00e6b0;
+            padding: 3px 14px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 200, 150, 0.15);
+        }
+
+        .plan-card .plan-name {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .plan-card .plan-sub {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .plan-card .price {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .plan-card .price small {
+            font-size: 16px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .plan-card .price .strikethrough {
+            font-size: 16px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.25);
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        .plan-card .price-note {
+            color: #ffd200;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .plan-card .price-note .highlight {
+            background: rgba(255, 210, 0, 0.15);
+            padding: 2px 10px;
+            border-radius: 50px;
+        }
+
+        .plan-card hr {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 18px 0;
+        }
+
+        .plan-card .features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .plan-card .features li {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-card .features li i {
+            color: #ffd200;
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .plan-card .features li .muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .plan-card .btn-plan {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .plan-card .btn-plan.primary {
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            color: #0a0a1a;
+        }
+
+        .plan-card .btn-plan.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 210, 0, 0.25);
+        }
+
+        .plan-card .btn-plan.outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .plan-card .btn-plan.outline:hover {
+            border-color: #ffd200;
+            background: rgba(255, 210, 0, 0.05);
+        }
+
+        .plan-card .btn-plan .small-text {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+
+        /* Free Plan Special */
+        .plan-card.free-plan {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .plan-card.free-plan .price {
+            font-size: 28px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .toggle-wrapper {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .plan-card {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .plan-card {
+            animation: fadeUp 0.6s ease backwards;
+        }
+        .plan-card:nth-child(1) { animation-delay: 0.1s; }
+        .plan-card:nth-child(2) { animation-delay: 0.2s; }
+        .plan-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+        }
+
+        .footer-note i {
+            color: #ffd200;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="badge"><i class="fas fa-bolt"></i> LIMITED TIME OFFER</div>
+        <h1>Chagua <span>Mpango</span> Wako</h1>
+        <p>Chagua mpango unaokufaa zaidi. Anza bila malipo.</p>
+    </div>
+
+    <!-- Toggle Monthly / Annually -->
+    <div class="toggle-wrapper">
+        <span class="label active" id="monthlyLabel">Mwezi</span>
+        <div class="toggle-switch" id="toggleSwitch">
+            <div class="slider"></div>
+        </div>
+        <span class="label" id="annualLabel">Mwaka</span>
+        <span class="save-badge"><i class="fas fa-tag"></i> Okoa 17%</span>
+    </div>
+
+    <!-- Plans Grid -->
+    <div class="plans-grid" id="plansGrid">
+        <!-- PLAN 1: FREE -->
+        <div class="plan-card free-plan">
+            <div class="new-user-tag"><i class="fas fa-gift"></i> NEW USERS OFFER</div>
+            <div class="plan-name">Bure</div>
+            <div class="plan-sub">Anza na credits bure</div>
+            <div class="price">$0 <small>/ mwezi</small></div>
+            <div class="price-note"><span class="highlight">10 credits bure</span> kuanza</div>
+            <hr>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> 10 credits bure</li>
+                <li><i class="fas fa-check"></i> Kujifunza na kupima</li>
+                <li><i class="fas fa-check"></i> Hakuna kadi ya mkopo</li>
+                <li><i class="fas fa-check muted"></i> <span class="muted">Features za kawaida</span></li>
+                <li><i class="fas fa-check muted"></i> <span class="muted">Deployment ndogo</span></li>
+            </ul>
+            <button class="btn-plan outline" onclick="selectPlan('Bure', 0)">
+                <i class="fas fa-user-plus"></i> Unda Akaunti Bure
+            </button>
+        </div>
+
+        <!-- PLAN 2: STANDARD (POPULAR) -->
+        <div class="plan-card popular" id="standardCard">
+            <div class="offer-tag"><i class="fas fa-clock"></i> 3-DAY STANDARD PASS</div>
+            <div class="plan-name">Standard</div>
+            <div class="plan-sub">Kwa waanzilishi na chapa</div>
+            <div class="price" id="standardPrice">$20 <small>/ mwezi</small></div>
+            <div class="price-note" id="standardNote">
+                <span class="highlight">$1 / siku 3</span> · 95% OFF
+            </div>
+            <hr>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> 100 credits / mwezi</li>
+                <li><i class="fas fa-check"></i> Mobile App Development</li>
+                <li><i class="fas fa-check"></i> Free custom domain</li>
+                <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                <li><i class="fas fa-check"></i> GitHub integration</li>
+                <li><i class="fas fa-check"></i> 150 bonus credits</li>
+            </ul>
+            <button class="btn-plan primary" onclick="selectPlan('Standard', 20)">
+                <i class="fas fa-rocket"></i> Lipa Sasa - $1
+                <span class="small-text">(siku 3)</span>
+            </button>
+            <div style="text-align:center;margin-top:10px;font-size:11px;color:rgba(255,255,255,0.25);">
+                Inajisajili tena $20/mo · Ghairi wakati wowote
+            </div>
+        </div>
+
+        <!-- PLAN 3: PRO -->
+        <div class="plan-card">
+            <div class="plan-name">Pro</div>
+            <div class="plan-sub">Kwa wataalamu na biashara</div>
+            <div class="price" id="proPrice">$181 <small>/ mwezi</small></div>
+            <div class="price-note" id="proNote">Kwa watengenezaji wakubwa</div>
+            <hr>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> 750 credits / mwezi</li>
+                <li><i class="fas fa-check"></i> Kila kitu cha Standard</li>
+                <li><i class="fas fa-check"></i> E-3 Agent</li>
+                <li><i class="fas fa-check"></i> Full Standard access</li>
+                <li><i class="fas fa-check"></i> Free deployment</li>
+                <li><i class="fas fa-check"></i> Private projects</li>
+                <li><i class="fas fa-check"></i> Na mengine mengi</li>
+            </ul>
+            <button class="btn-plan outline" onclick="selectPlan('Pro', 181)">
+                <i class="fas fa-arrow-up"></i> Upgrade to Pro
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-note">
+        <i class="fas fa-shield-alt"></i> Malipo yako yamehifadhiwa · Ghairi wakati wowote
+        <br>
+        <span style="font-size:11px;color:rgba(255,255,255,0.12);">aiappteam.com</span>
+    </div>
+</div>
+
+<script>
+    // ===================== TOGGLE MONTHLY / ANNUALLY =====================
+    const toggleSwitch = document.getElementById('toggleSwitch');
+    const monthlyLabel = document.getElementById('monthlyLabel');
+    const annualLabel = document.getElementById('annualLabel');
+    let isAnnual = false;
+
+    // Plan prices
+    const prices = {
+        standard: { monthly: 20, annual: 199 },
+        pro: { monthly: 181, annual: 1800 }
+    };
+
+    toggleSwitch.addEventListener('click', function() {
+        this.classList.toggle('annual');
+        isAnnual = this.classList.contains('annual');
+
+        // Update labels
+        monthlyLabel.classList.toggle('active', !isAnnual);
+        annualLabel.classList.toggle('active', isAnnual);
+
+        // Update prices
+        const standardPrice = document.getElementById('standardPrice');
+        const proPrice = document.getElementById('proPrice');
+        const standardNote = document.getElementById('standardNote');
+        const proNote = document.getElementById('proNote');
+
+        if (isAnnual) {
+            standardPrice.innerHTML = `$${prices.standard.annual} <small>/ mwaka</small>`;
+            proPrice.innerHTML = `$${prices.pro.annual} <small>/ mwaka</small>`;
+            standardNote.innerHTML = `<span class="highlight">Okoa $41</span> · unalipa mwaka mzima`;
+            proNote.innerHTML = `<span class="highlight">Okoa $372</span> · unalipa mwaka mzima`;
+        } else {
+            standardPrice.innerHTML = `$${prices.standard.monthly} <small>/ mwezi</small>`;
+            proPrice.innerHTML = `$${prices.pro.monthly} <small>/ mwezi</small>`;
+            standardNote.innerHTML = `<span class="highlight">$1 / siku 3</span> · 95% OFF`;
+            proNote.innerHTML = `Kwa watengenezaji wakubwa`;
+        }
+    });
+
+    // ===================== SELECT PLAN =====================
+    function selectPlan(name, amount) {
+        // Simulate payment process
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inasindika...';
+        btn.disabled = true;
+
+        // Get phone (you can add an input or use a prompt)
+        const phone = prompt('Tafadhali andika namba yako ya simu:');
+
+        if (!phone || phone.length < 9) {
+            alert('Namba ya simu ni lazima.');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        // Simulate API call
+        setTimeout(() => {
+            alert(`✅ Umefanikiwa kuchagua mpango wa ${name}!\nKiasi: $${amount}\nNamba: ${phone}\n\nMalipo yatafanyika kupitia backend.`);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 1500);
+    }
+
+    // ===================== KEYBOARD SHORTCUTS =====================
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '1') selectPlan('Bure', 0);
+        if (e.key === '2') selectPlan('Standard', 20);
+        if (e.key === '3') selectPlan('Pro', 181);
+    });
+</script>
+
+</body>
+  </html>
