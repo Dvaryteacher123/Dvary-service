@@ -1,32 +1,456 @@
 <!DOCTYPE html>
-<html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dvary Services - Lipa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px 35px;
+            max-width: 550px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label i {
+            margin-right: 10px;
+            color: #ffd200;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 12px;
+        }
+
+        select:focus, input:focus {
+            border-color: #ffd200;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 25px rgba(255, 210, 0, 0.15);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffd200' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 20px;
+        }
+
+        input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffd200' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 20px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Payment Methods Grid */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .payment-option {
+            background: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 210, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .payment-option.selected {
+            border-color: #ffd200;
+            background: rgba(255, 210, 0, 0.15);
+            box-shadow: 0 0 30px rgba(255, 210, 0, 0.1);
+        }
+
+        .payment-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ffd200;
+            color: #1a1a2e;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-option i {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .payment-option .label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .payment-option .sub-label {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        /* Colors for icons */
+        .fa-cc-visa { color: #1a1f71; }
+        .fa-cc-mastercard { color: #eb001b; }
+        .fa-mobile-screen { color: #f7971e; } /* Airtel */
+        .fa-mobile-screen-button { color: #e60000; } /* Vodacom */
+        .fa-sim-card { color: #00b4d8; } /* Tigo */
+
+        .payment-option[data-method="visa"] i { color: #4a6cf7; }
+        .payment-option[data-method="airtel"] i { color: #f7971e; }
+        .payment-option[data-method="vodacom"] i { color: #e60000; }
+        .payment-option[data-method="tigo"] i { color: #00b4d8; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border: none;
+            border-radius: 16px;
+            color: #1a1a2e;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 210, 0, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit i {
+            font-size: 20px;
+        }
+
+        .total-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin: 20px 0 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .total-display .label-total {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .total-display .amount {
+            color: #ffd200;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .total-display .amount small {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer i {
+            color: #ffd200;
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .container {
+                padding: 25px 18px;
+            }
+
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .total-display .amount {
+                font-size: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeUp 0.6s ease;
+        }
+    </style>
+</head>
 <body>
-    <h1>Karibu Dvary Services</h1>
+
+<div class="container">
+    <div class="header">
+        <h1>💎 <span>Dvary</span> Services</h1>
+        <p>Chagua mpango na njia ya malipo</p>
+    </div>
+
     <form id="paymentForm">
-        <select id="plan">
-            <option value="500">Daily - 500 TZS</option>
-            <option value="3000">Weekly - 3000 TZS</option>
-        </select>
-        <input type="text" id="phone" placeholder="Namba ya simu" required>
-        <button type="submit">Lipa Sasa</button>
+        <!-- Plan Selection -->
+        <div class="form-group">
+            <label><i class="fas fa-crown"></i> Chagua Mpango</label>
+            <select id="plan" required>
+                <option value="5000">🌟 Daily Basic - 5,000 TZS</option>
+                <option value="10000">🔥 Daily Premium - 10,000 TZS</option>
+                <option value="20000">⚡ Weekly Starter - 20,000 TZS</option>
+                <option value="35000">🚀 Weekly Pro - 35,000 TZS</option>
+                <option value="50000">💼 Monthly Lite - 50,000 TZS</option>
+                <option value="75000">📈 Monthly Plus - 75,000 TZS</option>
+                <option value="100000">🏆 Monthly Premium - 100,000 TZS</option>
+                <option value="150000">👑 Elite Monthly - 150,000 TZS</option>
+                <option value="200000">💎 Diamond - 200,000 TZS</option>
+                <option value="300000">🌟 Platinum - 300,000 TZS</option>
+                <option value="500000">👔 Executive - 500,000 TZS</option>
+            </select>
+        </div>
+
+        <!-- Phone Input -->
+        <div class="form-group">
+            <label><i class="fas fa-phone"></i> Namba ya Simu</label>
+            <input type="tel" id="phone" placeholder="Andika namba yako (eg: 0712345678)" required>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="form-group">
+            <label><i class="fas fa-credit-card"></i> Chagua Njia ya Malipo</label>
+            <div class="payment-methods" id="paymentMethods">
+                <div class="payment-option selected" data-method="visa">
+                    <i class="fab fa-cc-visa"></i>
+                    <div class="label">Visa</div>
+                    <div class="sub-label">Kadi</div>
+                </div>
+                <div class="payment-option" data-method="airtel">
+                    <i class="fas fa-mobile-screen"></i>
+                    <div class="label">Airtel</div>
+                    <div class="sub-label">Money</div>
+                </div>
+                <div class="payment-option" data-method="vodacom">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <div class="label">Vodacom</div>
+                    <div class="sub-label">M-Pesa</div>
+                </div>
+                <div class="payment-option" data-method="tigo">
+                    <i class="fas fa-sim-card"></i>
+                    <div class="label">Tigo</div>
+                    <div class="sub-label">Pesa</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Display -->
+        <div class="total-display">
+            <span class="label-total">Jumla ya Kulipa</span>
+            <span class="amount" id="totalAmount">5,000 <small>TZS</small></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-lock"></i> Lipa Sasa
+        </button>
     </form>
 
-    <script>
-        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await fetch('/api/pay', {
+    <div class="footer">
+        <i class="fas fa-shield-alt"></i> Malipo yako yamehifadhiwa kwa usalama
+    </div>
+</div>
+
+<script>
+    // Payment method selection
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    let selectedMethod = 'visa';
+
+    paymentOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            paymentOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedMethod = this.dataset.method;
+        });
+    });
+
+    // Update total when plan changes
+    const planSelect = document.getElementById('plan');
+    const totalDisplay = document.getElementById('totalAmount');
+
+    planSelect.addEventListener('change', function() {
+        const amount = parseInt(this.value);
+        totalDisplay.innerHTML = `${amount.toLocaleString()} <small>TZS</small>`;
+    });
+
+    // Form submission
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const phone = document.getElementById('phone').value.trim();
+        const amount = planSelect.value;
+        const planName = planSelect.options[planSelect.selectedIndex].text;
+
+        // Validate phone number (basic)
+        if (!phone || phone.length < 9) {
+            alert('Tafadhali andika namba halali ya simu.');
+            return;
+        }
+
+        const submitBtn = document.querySelector('.btn-submit');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inasindika...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/pay', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    phone: document.getElementById('phone').value,
-                    amount: document.getElementById('plan').value,
-                    planName: 'Service Plan'
+                body: JSON.stringify({
+                    phone: phone,
+                    amount: parseInt(amount),
+                    planName: planName,
+                    paymentMethod: selectedMethod
                 })
             });
-            const data = await res.json();
-            alert(data.success ? "Malipo yameanzishwa!" : "Imeshindikana");
-        });
-    </script>
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(`✅ Malipo ya ${parseInt(amount).toLocaleString()} TZS yameanzishwa!\nNjia: ${selectedMethod.toUpperCase()}\nNamba: ${phone}`);
+            } else {
+                alert('❌ Imeshindikana. Tafadhali jaribu tena.');
+            }
+        } catch (error) {
+            alert('❌ Hitilafu ya mtandao. Jaribu tena.');
+        } finally {
+            submitBtn.innerHTML = '<i class="fas fa-lock"></i> Lipa Sasa';
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+
 </body>
 </html>
-
