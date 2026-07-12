@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lipa Huduma</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .card { border: 1px solid #ccc; padding: 20px; border-radius: 10px; width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Lipa Huduma</h2>
+    <input type="text" id="phone" placeholder="Namba ya Simu (mf. 0712345678)" required>
+    <input type="number" id="amount" placeholder="Kiasi (TZS)" required>
+    <button onclick="fanyaMalipo()">Lipa Sasa</button>
+    <p id="message"></p>
+</div>
+
+<script>
+    async function fanyaMalipo() {
+        const phone = document.getElementById('phone').value;
+        const amount = document.getElementById('amount').value;
+        const msg = document.getElementById('message');
+
+        msg.innerText = "Inachakata...";
+
+        try {
+            const response = await fetch('/api/malipo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, amount, description: "Huduma ya mtandaoni" })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                msg.innerText = "Ombi la malipo limetumwa! Angalia simu yako.";
+            } else {
+                msg.innerText = "Imeshindwa: " + (data.message || "Hitilafu imetokea.");
+            }
+        } catch (error) {
+            msg.innerText = "Kuna tatizo la mtandao.";
+        }
+    }
+</script>
+
+</body>
+</html>
+
